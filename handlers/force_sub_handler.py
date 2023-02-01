@@ -32,7 +32,7 @@ async def handle_force_sub(bot: Client, cmd: Message):
         if user.status == "kicked":
             await bot.send_message(
                 chat_id=cmd.from_user.id,
-                text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/JoinOT).",
+                text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/TR_Discussion).",
                 disable_web_page_preview=True
             )
             return 400
@@ -44,12 +44,12 @@ async def handle_force_sub(bot: Client, cmd: Message):
             return 200
         await bot.send_message(
             chat_id=cmd.from_user.id,
-            text="**Please Join My Updates Channel to use this Bot!**\n\n"
-                 "Due to Overload, Only Channel Subscribers can use the Bot!",
+            text="**என்னுடைய அப்டேட் சேனளில் இணைந்தால் தான் என்னை பயன்படுத்தமுடியும் ⚠️Please Join My Updates Channel to use this Bot!**\n\n"
+                 "காப்பிரைட் பிரச்சனை உள்ளதால் உறுப்பினர்கள் அனைவரும் நம்முடைய அப்டேட் சேனளில் இணையவேண்டும் Due to Overload, Only Channel Subscribers can use the Bot!",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("🤖 Join Updates Channel", url=invite_link.invite_link)
+                        InlineKeyboardButton("🤖 அப்டேட் சேனளில் இணையவும் Join Updates Channel", url=invite_link.invite_link)
                     ],
                     [
                         InlineKeyboardButton("🔄 Refresh 🔄", callback_data="refreshForceSub")
@@ -61,7 +61,7 @@ async def handle_force_sub(bot: Client, cmd: Message):
     except Exception:
         await bot.send_message(
             chat_id=cmd.from_user.id,
-            text="Something went Wrong. Contact my [Support Group](https://t.me/JoinOT).",
+            text="Something went Wrong. Contact my [Support Group](https://t.me/TR_Discussion).",
             disable_web_page_preview=True
         )
         return 200
