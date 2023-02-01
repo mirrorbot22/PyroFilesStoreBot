@@ -1,4 +1,4 @@
-# (c) @AbirHasan2005
+# (c) @TamilnaduCM
 
 import os
 import asyncio
@@ -38,15 +38,81 @@ from handlers.save_media import (
     save_batch_media_in_channel
 )
 
-MediaList = {}
+MediaList = {} 
+REPLIT = True
 
-Bot = Client(
-    name=Config.BOT_USERNAME,
-    in_memory=True,
-    bot_token=Config.BOT_TOKEN,
-    api_id=Config.API_ID,
-    api_hash=Config.API_HASH
-)
+if REPLIT:
+    from threading import Thread
+
+    from flask import Flask, jsonify
+    app = Flask('')
+    
+    @app.route('/')
+    def main():
+
+        res = {
+            "status":"running",
+            "hosted":"replit.com",
+        }
+        
+        return jsonify(res)
+
+    def run():
+      app.run(host="0.0.0.0", port=8000)
+    
+    async def keep_alive():
+      server = Thread(target=run)
+      server.start()
+      
+      # Bot = Client(
+#     Config.BOT_USERNAME,
+#     bot_token=Config.BOT_TOKEN,
+#     api_id=Config.API_ID,
+#     api_hash=Config.API_HASH
+# )
+
+class Bot(Client):
+    def __init__(self):
+        super().__init__(
+        Config.BOT_USERNAME,
+        api_id=Config.API_ID,
+        api_hash=Config.API_HASH,
+        bot_token=Config.BOT_TOKEN,
+
+        )
+
+    async def start(self):
+        if REPLIT:
+            await keep_alive()
+        # Config.AUTH_USERS.add(str(1413767412))
+        await super().start()
+
+
+    async def stop(self, *args):
+        await super().stop()
+
+
+Bot = Bot() 
+
+bot_token = os.environ.get("BOT_TOKEN", "") 
+api_hash = os.environ.get("API_HASH", "") 
+api_id = os.environ.get("API_ID", "")
+BOT_USERNAME = os.environ.get("")
+DB_CHANNEL = int(os.environ.get("DB_CHANNEL", "-100"))
+BOT_OWNER = int(os.environ.get("BOT_OWNER", "1445283714"))
+DATABASE_URL = os.environ.get("DATABASE_URL")
+UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "")
+LOG_CHANNEL = os.environ.get("LOG_CHANNEL", None)
+FORWARD_AS_COPY = bool(os.environ.get("FORWARD_AS_COPY", True))
+BROADCAST_AS_COPY = bool(os.environ.get("BROADCAST_AS_COPY", True))
+
+# Bot = Client(
+#     name=Config.BOT_USERNAME,
+#     in_memory=True,
+#     bot_token=Config.BOT_TOKEN,
+#     api_id=Config.API_ID,
+#     api_hash=Config.API_HASH
+# )
 
 
 @Bot.on_message(filters.private)
@@ -74,8 +140,8 @@ async def start(bot: Client, cmd: Message):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Support Group", url="https://t.me/JoinOT"),
-                        InlineKeyboardButton("Bots Channel", url="https://t.me/Discovery_Updates")
+                        InlineKeyboardButton("Support Group", url="https://t.me/TR_Discussion"),
+                        InlineKeyboardButton("Bots Channel", url="https://t.me/u7news")
                     ],
                     [
                         InlineKeyboardButton("About Bot", callback_data="aboutbot"),
@@ -120,7 +186,7 @@ async def main(bot: Client, message: Message):
                 return
 
         if message.from_user.id in Config.BANNED_USERS:
-            await message.reply_text("Sorry, You are banned!\n\nContact [Support Group](https://t.me/JoinOT)",
+            await message.reply_text("Sorry, You are banned!\n\nContact [Support Group](https://t.me/TR_Discussion)",
                                      disable_web_page_preview=True)
             return
 
@@ -148,7 +214,7 @@ async def main(bot: Client, message: Message):
         try:
             forwarded_msg = await message.forward(Config.DB_CHANNEL)
             file_er_id = str(forwarded_msg.id)
-            share_link = f"https://t.me/{Config.BOT_USERNAME}?start=AbirHasan2005_{str_to_b64(file_er_id)}"
+            share_link = f"https://telegram.me/{Config.BOT_USERNAME}?start=PremiumFileStoreBot_{str_to_b64(file_er_id)}"
             CH_edit = await bot.edit_message_reply_markup(message.chat.id, message.id,
                                                           reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(
                                                               "Get Sharable Link", url=share_link)]]))
@@ -314,8 +380,8 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Source Codes of Bot",
-                                             url="https://github.com/AbirHasan2005/PyroFilesStoreBot")
+                        InlineKeyboardButton("Our Backup Channel",
+                                             url="https://t.me/u7news")
                     ],
                     [
                         InlineKeyboardButton("Go Home", callback_data="gotohome"),
@@ -332,8 +398,8 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Source Codes of Bot",
-                                             url="https://github.com/AbirHasan2005/PyroFilesStoreBot")
+                        InlineKeyboardButton("Our Backup Channel",
+                                             url="https://t.me/u7news")
                     ],
                     [
                         InlineKeyboardButton("About Bot", callback_data="aboutbot"),
@@ -350,8 +416,8 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Support Group", url="https://t.me/JoinOT"),
-                        InlineKeyboardButton("Bots Channel", url="https://t.me/Discovery_Updates")
+                        InlineKeyboardButton("Support Group", url="https://t.me/TR_Discussion"),
+                        InlineKeyboardButton("Bots Channel", url="https://t.me/u7news")
                     ],
                     [
                         InlineKeyboardButton("About Bot", callback_data="aboutbot"),
@@ -366,27 +432,28 @@ async def button(bot: Client, cmd: CallbackQuery):
             if Config.UPDATES_CHANNEL.startswith("-100"):
                 channel_chat_id = int(Config.UPDATES_CHANNEL)
             else:
-                channel_chat_id = Config.UPDATES_CHANNEL
+              channel_chat_id = Config.UPDATES_CHANNEL
             try:
                 user = await bot.get_chat_member(channel_chat_id, cmd.message.chat.id)
                 if user.status == "kicked":
                     await cmd.message.edit(
-                        text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/JoinOT).",
+                        text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/TR_Discussion).",
                         disable_web_page_preview=True
                     )
                     return
             except UserNotParticipant:
                 invite_link = await get_invite_link(channel_chat_id)
                 await cmd.message.edit(
-                    text="**You Still Didn't Join ☹️, Please Join My Updates Channel to use this Bot!**\n\n"
+                    text="**நீங்கள் இன்னும் என்னுடைய சேனளில் இணையவில்லை சேனளில் இணைந்தால் தான் என்னை பயன்படுத்தமுடியும் ⚠️ You Still Didn't Join ☹️, Please Join My Updates Channel to use this Bot!**\n\n"
                          "Due to Overload, Only Channel Subscribers can use the Bot!",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton("🤖 Join Updates Channel", url=invite_link.invite_link)
                             ],
-                            [
-                                InlineKeyboardButton("🔄 Refresh 🔄", callback_data="refreshmeh")
+
+                           [
+InlineKeyboardButton("🔄 Refresh 🔄", callback_data="refreshmeh")
                             ]
                         ]
                     )
@@ -394,7 +461,7 @@ async def button(bot: Client, cmd: CallbackQuery):
                 return
             except Exception:
                 await cmd.message.edit(
-                    text="Something went Wrong. Contact my [Support Group](https://t.me/JoinOT).",
+                    text="Something went Wrong. Contact my [Support Group](https://t.me/TR_Discussion).",
                     disable_web_page_preview=True
                 )
                 return
@@ -404,8 +471,8 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Support Group", url="https://t.me/JoinOT"),
-                        InlineKeyboardButton("Bots Channel", url="https://t.me/Discovery_Updates")
+                        InlineKeyboardButton("Support Group", url="https://t.me/TR_Discussion"),
+                        InlineKeyboardButton("Bots Channel", url="https://t.me/u7news")
                     ],
                     [
                         InlineKeyboardButton("About Bot", callback_data="aboutbot"),
