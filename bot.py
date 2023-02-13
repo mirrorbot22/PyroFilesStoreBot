@@ -38,7 +38,8 @@ from handlers.save_media import (
     save_batch_media_in_channel
 )
 
-MediaList = {} 
+MediaList = {}
+
     async def keep_alive():
       server = Thread(target=run)
       server.start()
