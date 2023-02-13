@@ -40,52 +40,6 @@ from handlers.save_media import (
 
 MediaList = {}
 
-    async def keep_alive():
-      server = Thread(target=run)
-      server.start()
-      
-      # Bot = Client(
-#     Config.BOT_USERNAME,
-#     bot_token=Config.BOT_TOKEN,
-#     api_id=Config.API_ID,
-#     api_hash=Config.API_HASH
-# )
-
-class Bot(Client):
-    def __init__(self):
-        super().__init__(
-        Config.BOT_USERNAME,
-        api_id=Config.API_ID,
-        api_hash=Config.API_HASH,
-        bot_token=Config.BOT_TOKEN,
-
-        )
-
-    async def start(self):
-        if REPLIT:
-            await keep_alive()
-        # Config.AUTH_USERS.add(str(1413767412))
-        await super().start()
-
-
-    async def stop(self, *args):
-        await super().stop()
-
-
-Bot = Bot() 
-
-bot_token = os.environ.get("BOT_TOKEN", "") 
-api_hash = os.environ.get("API_HASH", "") 
-api_id = os.environ.get("API_ID", "")
-BOT_USERNAME = os.environ.get("")
-DB_CHANNEL = int(os.environ.get("DB_CHANNEL", "-100"))
-BOT_OWNER = int(os.environ.get("BOT_OWNER", "1445283714"))
-DATABASE_URL = os.environ.get("DATABASE_URL")
-UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "")
-LOG_CHANNEL = os.environ.get("LOG_CHANNEL", None)
-FORWARD_AS_COPY = bool(os.environ.get("FORWARD_AS_COPY", True))
-BROADCAST_AS_COPY = bool(os.environ.get("BROADCAST_AS_COPY", True))
-
 # Bot = Client(
 #     name=Config.BOT_USERNAME,
 #     in_memory=True,
@@ -93,7 +47,6 @@ BROADCAST_AS_COPY = bool(os.environ.get("BROADCAST_AS_COPY", True))
 #     api_id=Config.API_ID,
 #     api_hash=Config.API_HASH
 # )
-
 
 @Bot.on_message(filters.private)
 async def _(bot: Client, cmd: Message):
