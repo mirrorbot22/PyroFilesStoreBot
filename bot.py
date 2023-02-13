@@ -39,27 +39,6 @@ from handlers.save_media import (
 )
 
 MediaList = {} 
-REPLIT = True
-
-if REPLIT:
-    from threading import Thread
-
-    from flask import Flask, jsonify
-    app = Flask('')
-    
-    @app.route('/')
-    def main():
-
-        res = {
-            "status":"running",
-            "hosted":"replit.com",
-        }
-        
-        return jsonify(res)
-
-    def run():
-      app.run(host="0.0.0.0", port=8000)
-    
     async def keep_alive():
       server = Thread(target=run)
       server.start()
